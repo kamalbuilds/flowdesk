@@ -51,18 +51,26 @@ export function useCrossChainDeposit() {
     }
   }, [])
 
-  const executeDeposit = useCallback(async (quote: any) => {
+  const executeDeposit = useCallback(async (quote: any, sendTransaction: (params: { to: string; data: string; value: string; chainId: number }) => Promise<string>) => {
     setState(s => ({ ...s, status: 'bridging' }))
 
     try {
-      // In production, we'd use LI.FI SDK executeRoute
-      // For demo, we simulate the deposit
-      await new Promise(r => setTimeout(r, 3000))
+      const tx = quote.transactionRequest
+      if (!tx) {
+        throw new Error('No transaction data in LI.FI quote')
+      }
+
+      const txHash = await sendTransaction({
+        to: tx.to,
+        data: tx.data,
+        value: tx.value || '0x0',
+        chainId: tx.chainId,
+      })
 
       setState(s => ({
         ...s,
         status: 'done',
-        txHash: `0x${Array.from({length: 64}, () => Math.floor(Math.random() * 16).toString(16)).join('')}`,
+        txHash,
       }))
     } catch (err: any) {
       setState(s => ({ ...s, status: 'error', error: err.message }))

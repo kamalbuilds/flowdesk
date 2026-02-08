@@ -39,7 +39,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex h-screen flex-col bg-background overflow-hidden">
       {/* Header */}
       <header className="flex items-center justify-between border-b border-border px-6 py-3">
         <div className="flex items-center gap-3">
@@ -70,7 +70,7 @@ export default function Home() {
 
       {/* Main Content */}
       {!isConnected ? (
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 items-center justify-center overflow-auto">
           <div className="max-w-md text-center space-y-6">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tight">
