@@ -1,4 +1,4 @@
-# FlowDesk -- AI Trading Copilot
+# FlowDesk - Offchain AI Trading Terminal
 
 [![ETHGlobal HackMoney 2026](https://img.shields.io/badge/ETHGlobal-HackMoney%202026-6F3FF5?style=flat-square)](https://ethglobal.com/)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=next.js)](https://nextjs.org/)
