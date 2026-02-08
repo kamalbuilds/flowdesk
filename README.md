@@ -9,17 +9,31 @@
 
 > AI trading copilot: instant off-chain trades via Yellow state channels, LI.FI deposits, ENS identity
 
-FlowDesk is an AI-powered DeFi trading terminal that combines instant off-chain execution through Yellow Network state channels, cross-chain liquidity via LI.FI, and portable DeFi identity through ENS -- all driven by a conversational AI copilot.
+**FlowDesk** is an AI-powered DeFi trading assistant that combines instant off-chain execution (Yellow state channels), cross-chain liquidity (LI.FI), and portable DeFi identity (ENS) into a unified trading terminal. Users interact with a conversational AI copilot that reads their on-chain preferences, accepts deposits from any chain, and executes trades instantly through state channels settling on-chain only when the session ends.
+
+2. Problem Statement
+
+### The DeFi Trading Experience is Broken
+
+1. **Gas costs kill micro-trading**: Every swap costs $0.50-$5+ in gas. Day traders making 20+ trades/day lose $10-100+ to gas alone.
+2. **Speed kills alpha**: On-chain transactions take 2-15 seconds. By then, the opportunity is gone.
+3. **Cross-chain friction**: Your USDC is on Arbitrum but the best yield is on Optimism. Bridging takes minutes and costs gas.
+4. **Settings don't travel**: Every DeFi app makes you re-configure slippage, deadlines, and preferences. Nothing is portable.
+5. **Complexity barrier**: New users are overwhelmed by chains, tokens, pools, and parameters.
+
+### FlowDesk's Solution
+
+Open a trading session. Tell the AI what you want. It executes instantly off-chain, settles when you're done. Your preferences follow you via ENS. Your funds come from any chain via LI.FI.
 
 ---
 
-## Bounty Tracks
+## Technology
 
-| Track | Sponsor | Details |
+| Technology | Sponsor | Details |
 |-------|---------|---------|
-| State Channels | Yellow Network ($15K) | Full Nitrolite SDK integration -- WebSocket auth, channel lifecycle, instant transfers |
-| Cross-Chain Deposits | LI.FI ($2-6K) | REST API quote + execution for multi-chain deposits to Base |
-| Portable DeFi Identity | ENS ($5K) | Custom `com.flowdesk.*` text record schema for trading preferences |
+| State Channels | Yellow Network | Full Nitrolite SDK integration -- WebSocket auth, channel lifecycle, instant transfers |
+| Cross-Chain Deposits | LI.FI | REST API quote + execution for multi-chain deposits to Base |
+| Portable DeFi Identity | ENS | Custom `com.flowdesk.*` text record schema for trading preferences |
 
 ---
 
@@ -27,7 +41,7 @@ FlowDesk is an AI-powered DeFi trading terminal that combines instant off-chain 
 
 ### 1. Yellow Network / Nitrolite -- Instant Off-Chain Trading
 
-The deepest integration in the project. A full Nitrolite RPC client (`app/src/lib/yellow/client.ts`, 550+ lines) implements the complete state channel lifecycle:
+The deepest integration in the project. A full Nitrolite RPC client (`app/src/lib/yellow/client.ts`) implements the complete state channel lifecycle:
 
 - **Session Key Architecture** -- One EIP-712 wallet signature during authentication, then an ephemeral session key (generated via `generatePrivateKey()` from viem) signs all subsequent trades. Zero wallet popups during active trading.
 - **3-Step Authentication Flow** -- `createAuthRequestMessage()` sends credentials, receives `auth_challenge`, signs EIP-712 typed data with `createEIP712AuthMessageSigner()`, completes via `createAuthVerifyMessage()` to receive a JWT.
@@ -151,7 +165,7 @@ app/
   src/
     lib/
       yellow/
-        client.ts          Nitrolite RPC client (550+ lines) -- auth, channels, transfers
+        client.ts          Nitrolite RPC client -- auth, channels, transfers
       ai/
         engine.ts          AI trade parser (OpenRouter + regex fallback)
         prompts.ts         System prompts with ENS preference injection
