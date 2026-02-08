@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { useAccount, useSendTransaction } from 'wagmi'
 import { useCrossChainDeposit } from '@/hooks/useCrossChainDeposit'
 import { SUPPORTED_CHAINS } from '@/lib/constants'
 import type { DepositState } from '@/types'
@@ -15,7 +14,7 @@ import type { DepositState } from '@/types'
 // Constants
 // ---------------------------------------------------------------------------
 
-const TARGET_CHAIN_ID = 8453 // Base
+const TARGET_CHAIN_ID = 42161 // Arbitrum
 const TARGET_TOKEN = 'USDC'
 
 const SOURCE_TOKENS = [
@@ -268,7 +267,7 @@ function QuotePreview({
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M7 1.167A5.833 5.833 0 1012.833 7 5.84 5.84 0 007 1.167zm0 9.333V6.417m0-2.334h.006" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        <span>Funds will be deposited into your FlowDesk trading session on Base.</span>
+        <span>Funds will be deposited into your FlowDesk trading session on Arbitrum.</span>
       </div>
     </div>
   )
@@ -438,8 +437,6 @@ function ErrorView({
 
 export function CrossChainDeposit({ onDepositComplete }: CrossChainDepositProps) {
   const { state, getQuote, executeDeposit, reset } = useCrossChainDeposit()
-  const { address } = useAccount()
-  const { sendTransactionAsync } = useSendTransaction()
 
   const [selectedChain, setSelectedChain] = useState<number | null>(null)
   const [selectedToken, setSelectedToken] = useState<string | null>(null)
@@ -465,9 +462,10 @@ export function CrossChainDeposit({ onDepositComplete }: CrossChainDepositProps)
   const handleGetQuote = useCallback(async () => {
     if (!selectedChain || !selectedToken || !amount) return
 
-    const fromAddress = address || '0x0000000000000000000000000000000000000000'
+    // Use a placeholder address for quoting
+    const fromAddress = '0x0000000000000000000000000000000000000000'
     const tokenAddress = selectedToken === 'ETH' ? '0x0000000000000000000000000000000000000000' : selectedToken
-    const toToken = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' // USDC on Base
+    const toToken = '0xaf88d065e77c8cC2239327C5EDb3A432268e5831' // USDC on Arbitrum
 
     const decimals = selectedToken === 'ETH' ? 18 : selectedToken === 'WBTC' ? 8 : 6
     const parsedAmount = (parseFloat(amount) * 10 ** decimals).toFixed(0)
@@ -477,18 +475,11 @@ export function CrossChainDeposit({ onDepositComplete }: CrossChainDepositProps)
 
   const handleExecute = useCallback(async () => {
     if (!state.quote) return
-    await executeDeposit(state.quote, async (params) => {
-      const hash = await sendTransactionAsync({
-        to: params.to as `0x${string}`,
-        data: params.data as `0x${string}`,
-        value: BigInt(params.value || '0'),
-      })
-      return hash
-    })
+    await executeDeposit(state.quote)
     if (onDepositComplete) {
       onDepositComplete(parseFloat(amount))
     }
-  }, [state.quote, executeDeposit, sendTransactionAsync, amount, onDepositComplete])
+  }, [state.quote, executeDeposit, amount, onDepositComplete])
 
   const handleReset = useCallback(() => {
     reset()
