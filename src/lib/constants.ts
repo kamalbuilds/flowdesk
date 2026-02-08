@@ -1,9 +1,9 @@
 export const SUPPORTED_CHAINS = [
-  { id: 1, name: 'Ethereum', icon: '⟠' },
-  { id: 8453, name: 'Base', icon: '🔷' },
-  { id: 137, name: 'Polygon', icon: '🟣' },
-  { id: 42161, name: 'Arbitrum', icon: '🔵' },
-  { id: 10, name: 'Optimism', icon: '🔴' },
+  { id: 1, name: 'Ethereum', logo: 'https://coin-images.coingecko.com/coins/images/279/small/ethereum.png' },
+  { id: 8453, name: 'Base', logo: 'https://coin-images.coingecko.com/asset_platforms/images/131/small/base.png' },
+  { id: 137, name: 'Polygon', logo: 'https://coin-images.coingecko.com/coins/images/4713/small/polygon.png' },
+  { id: 42161, name: 'Arbitrum', logo: 'https://coin-images.coingecko.com/coins/images/16547/small/arb.jpg' },
+  { id: 10, name: 'Optimism', logo: 'https://coin-images.coingecko.com/coins/images/25244/small/Optimism.png' },
 ] as const
 
 // Chains with Nitrolite custody contracts deployed

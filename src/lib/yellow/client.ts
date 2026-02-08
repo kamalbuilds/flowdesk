@@ -509,16 +509,22 @@ export class YellowClient {
     this.notify()
 
     if (this.messageSigner && this.session.channelId && this.walletAddress) {
-      const requestId = generateRequestId()
-      const closeMsg = await createCloseChannelMessage(
-        this.messageSigner,
-        this.session.channelId as `0x${string}`,
-        this.walletAddress,
-        requestId,
-      )
+      try {
+        const requestId = generateRequestId()
+        const closeMsg = await createCloseChannelMessage(
+          this.messageSigner,
+          this.session.channelId as `0x${string}`,
+          this.walletAddress,
+          requestId,
+        )
 
-      await this.sendRequest(closeMsg, requestId)
-      console.log('[Yellow] Channel closed via Nitrolite')
+        await this.sendRequest(closeMsg, requestId)
+        console.log('[Yellow] Channel closed via Nitrolite')
+      } catch (err: any) {
+        // ClearNode may return "channel not found" if already settled or expired.
+        // Log but don't block session closure.
+        console.warn('[Yellow] Channel close error (settling anyway):', err.message)
+      }
     }
 
     this.session.status = 'closed'

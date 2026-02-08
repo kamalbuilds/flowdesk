@@ -137,7 +137,7 @@ function ChainSelection({
                   : 'border-zinc-800 bg-zinc-900/50 text-zinc-300 hover:border-zinc-700 hover:bg-zinc-800/60'
               }`}
             >
-              <span className="text-lg leading-none">{chain.icon}</span>
+              <img src={chain.logo} alt={chain.name} className="h-5 w-5 rounded-full" />
               <span>{chain.name}</span>
             </button>
           )
@@ -227,14 +227,14 @@ function QuotePreview({
       <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-2 text-zinc-400">
-            <span>{sourceChain?.icon}</span>
+            {sourceChain && <img src={sourceChain.logo} alt={sourceChain.name} className="h-4 w-4 rounded-full" />}
             <span>{sourceChain?.name}</span>
           </div>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-zinc-600">
             <path d="M3 8h10m0 0L9.5 4.5M13 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           <div className="flex items-center gap-2 text-zinc-400">
-            <span>{targetChain?.icon}</span>
+            {targetChain && <img src={targetChain.logo} alt={targetChain.name} className="h-4 w-4 rounded-full" />}
             <span>{targetChain?.name}</span>
           </div>
         </div>
