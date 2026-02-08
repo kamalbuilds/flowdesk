@@ -1,11 +1,14 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useAccount, useWalletClient } from 'wagmi'
 import { getYellowClient, YellowClient } from '@/lib/yellow/client'
 import type { TradingSession, Trade, PriceData } from '@/types'
 
 export function useYellowSession() {
   const clientRef = useRef<YellowClient | null>(null)
+  const { address } = useAccount()
+  const { data: walletClient } = useWalletClient()
   const [session, setSession] = useState<TradingSession>({
     id: '',
     channelId: null,
@@ -25,6 +28,14 @@ export function useYellowSession() {
       unsubscribe()
     }
   }, [])
+
+  // Pass walletClient to YellowClient when available
+  useEffect(() => {
+    const client = clientRef.current
+    if (client && walletClient && address) {
+      client.setWalletClient(walletClient, address)
+    }
+  }, [walletClient, address])
 
   const openSession = useCallback(async (depositAmount: number) => {
     const client = clientRef.current
